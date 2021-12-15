@@ -17,7 +17,7 @@ class ImportDataServiceProvider extends PackageServiceProvider
 
     public function registerConfigs()
     {
-        return ['import', 'database'];
+        return ['app', 'import', 'database'];
     }
 
     public function registerCommands()
