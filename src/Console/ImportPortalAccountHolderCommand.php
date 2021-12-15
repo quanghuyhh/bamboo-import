@@ -2,7 +2,7 @@
 
 namespace Bamboo\ImportData\Console;
 
-use App\Models\AccountHolder;
+use App\Models\{AccountHolder, Module};
 use Faker\Factory;
 use Illuminate\Console\Command;
 use Illuminate\Support\Arr;
