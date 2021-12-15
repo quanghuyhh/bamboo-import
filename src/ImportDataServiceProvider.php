@@ -8,7 +8,7 @@ use Bamboo\ImportData\Console\{ImportClientCommand, ImportDistributionListComman
 
 class ImportDataServiceProvider extends PackageServiceProvider
 {
-    protected $packageName = 'bamboo/import-data';
+    protected $packageName = 'bambooo/import-data';
 
     public function registerConfigs()
     {

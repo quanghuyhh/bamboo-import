@@ -1,12 +1,12 @@
 {
-    "name": "bamboo/import-data",
+    "name": "bambooo/import-data",
     "description": "Migrate data from old system",
     "type": "library",
     "license": "MIT",
     "authors": [
         {
-            "name": "Bamboo",
-            "email": "bamboo@webprovise.com"
+            "name": "Bambooo",
+            "email": "bamboo@import.com"
         }
     ],
     "require": {
