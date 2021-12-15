@@ -34,6 +34,6 @@ class User extends BaseModel
 
     public function stores()
     {
-        return $this->belongsToMany(Store::class, 'user_store_access', 'store_id', 'user_id');
+        return $this->belongsToMany(Store::class, 'user_store_access', 'user_id', 'store_id');
     }
 }

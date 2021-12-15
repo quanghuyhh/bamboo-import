@@ -2,12 +2,10 @@
 
 namespace Bamboo\ImportData\Console;
 
-use App\Models\Organization;
-use App\Models\User;
+use App\Models\{Organization, User};
 use Bamboo\ImportData\Models\User as OldUser;
 use Bamboo\ImportData\Services\PortalService;
-use Illuminate\Console\Command;
-use Illuminate\Support\Arr;
+use Illuminate\Console\{Arr, Command};
 use Illuminate\Support\Facades\DB;
 use Throwable;
 
