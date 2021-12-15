@@ -2,15 +2,19 @@
 
 namespace Bamboo\ImportData\Models\Transforms;
 
+use Bamboo\ImportData\Helpers\Traits\ParseDateTrait;
 use Illuminate\Support\Arr;
 
 trait AsUserTrait
 {
-    public function getUserData()
+    use ParseDateTrait;
+
+    public function getPortalUserData()
     {
+        $userNames = explode(" ", $this->name);
         return [
-            'first_name' => Arr::first(explode(" ", $this->name)),
-            'last_name' => Arr::last(explode(" ", $this->name)),
+            'first_name' => Arr::first($userNames),
+            'last_name' => $userNames[1] ?? '',
             'email' => $this->email,
             'phone' => null,
             'employee_number' => null,
@@ -26,9 +30,21 @@ trait AsUserTrait
             'can_update_profile' => true,
             'can_upload_photo' => true,
             'remember_token' => $this->remember_token,
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
-            'deleted_at' => $this->deleted_at,
+            'created_at' => static::parseDate($this->created_at),
+            'updated_at' => static::parseDate($this->updated_at),
+            'deleted_at' => static::parseDate($this->deleted_at),
         ];
+    }
+
+    public function getSalesUserData()
+    {
+        return Arr::only($this->getPortalUserData(), [
+            'first_name',
+            'last_name',
+            'active',
+            'created_at',
+            'updated_at',
+            'deleted_at',
+        ]);
     }
 }

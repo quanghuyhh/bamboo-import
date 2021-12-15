@@ -4,7 +4,12 @@ namespace Bamboo\ImportData;
 
 use Bamboo\ImportData\Base\Package;
 use Bamboo\ImportData\Base\PackageServiceProvider;
-use Bamboo\ImportData\Console\{ImportClientCommand, ImportDistributionListCommand, ImportOrganizationCommand};
+use Bamboo\ImportData\Console\{ImportClientCommand,
+    ImportDistributionListCommand,
+    ImportPortalAccountHolderCommand,
+    ImportPortalOrganizationCommand,
+    ImportPortalUserCommand
+};
 
 class ImportDataServiceProvider extends PackageServiceProvider
 {
@@ -23,7 +28,9 @@ class ImportDataServiceProvider extends PackageServiceProvider
             ImportDistributionListCommand::class,
 
             // portal
-            ImportOrganizationCommand::class,
+            ImportPortalAccountHolderCommand::class,
+            ImportPortalOrganizationCommand::class,
+            ImportPortalUserCommand::class,
         ];
     }
 

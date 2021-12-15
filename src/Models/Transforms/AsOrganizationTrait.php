@@ -17,4 +17,14 @@ trait AsOrganizationTrait
             'updated_at' => Carbon::now(),
         ];
     }
+
+    public function getOrganizationLocationData()
+    {
+        return [
+            'city' => '',
+            'state_code' => 'WA',
+            'address1' => 'unknow',
+            'is_main_location' => true,
+        ];
+    }
 }

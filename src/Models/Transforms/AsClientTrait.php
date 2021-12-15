@@ -34,9 +34,13 @@ trait AsClientTrait
                 'latitude' => $this->map_lat,
                 'longitude' => $this->map_lng,
             ],
+            // field rep from table user sales
             'field_rep_id' => $this->field_rep_id,
+
+            // vmi rep user
             'vmi_rep_id' => $this->vmi_rep,
             'vmi_starting_date' => $this->start_date_vmi,
+
             'delivery_day' => $this->delivery_day,
             'departure_day' => $this->departure_date,
             'mail_day' => $this->mail_day,
@@ -78,6 +82,6 @@ trait AsClientTrait
      */
     public function getClientState(string $state): string
     {
-        return Str::upper(Str::substr($state, 0, 2));
+        return Str::upper(Str::substr($state, 0, 2)) ?? 'WA';
     }
 }
