@@ -37,20 +37,21 @@ class ImportPortalUserCommand extends Command
     {
         $accountHolderId = app(PortalService::class)->getAccountHolderId();
         DB::transaction(function () use ($accountHolderId) {
-            OldUser::where('is_field_rep', true)->each(function (OldUser $oldUser) use ($accountHolderId) {
-                $userData = array_merge(
-                    $oldUser->getPortalUserData(),
-                    [
-                        'account_holder_id' => $accountHolderId
-                    ]
-                );
-                $user = User::create($userData);
+            OldUser::where('is_field_rep', true)
+                ->each(function (OldUser $oldUser) use ($accountHolderId) {
+                    $userData = array_merge(
+                        $oldUser->getPortalUserData(),
+                        [
+                            'account_holder_id' => $accountHolderId
+                        ]
+                    );
+                    $user = User::create($userData);
 
-                $organizationIds = Organization::whereIn('name', $oldUser->stores()->pluck('store')->toArray());
-                if (!empty($organizationIds)) {
-                    $user->organizations()->sync($organizationIds);
-                }
-            });
+                    $organizationIds = Organization::whereIn('name', $oldUser->stores()->pluck('store')->toArray());
+                    if (!empty($organizationIds)) {
+                        $user->organizations()->sync($organizationIds);
+                    }
+                });
         });
     }
 }
