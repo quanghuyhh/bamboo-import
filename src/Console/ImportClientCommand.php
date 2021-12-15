@@ -9,6 +9,7 @@ use Bamboo\ImportData\Services\PortalService;
 use Illuminate\Console\Command;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 use Throwable;
 
 class ImportClientCommand extends Command
@@ -38,19 +39,35 @@ class ImportClientCommand extends Command
     {
         $accountHolderId = app(PortalService::class)->getAccountHolderId();
         $distributionList = Distribution::get(['id', 'name']);
-        DB::transaction(function () use ($distributionList, $accountHolderId) {
-            OldClient::query()->each(function (OldClient $oldClient) use ($distributionList, $accountHolderId) {
+        $users = app(PortalService::class)->fetchAllUsers();
+        DB::transaction(function () use ($distributionList, $accountHolderId, $users) {
+            OldClient::query()->each(function (OldClient $oldClient) use ($distributionList, $accountHolderId, $users) {
                 // find distribution
-                $distribution = $distributionList->firstWhere('name', $oldClient->distributionList->name);
+                $distribution = !empty($oldClient->distributionList) ? $distributionList->firstWhere('name', $oldClient->distributionList->name) : null;
+
+                // find sales rep
+                $salesRep = !empty($oldClient->salesRep) ? $users->firstWhere('email', $oldClient->salesRep->email) : null;
+
+                // find vmi rep
+                $vmiRep = !empty($oldClient->vmiRep) ? $users->firstWhere('email', $oldClient->vmiRep->email) : null;
+
                 // create client
                 $clientData = array_merge(
                     $oldClient->getClientData(),
                     [
                         'account_holder_id' => $accountHolderId,
-                        'state_code' => $oldClient->getClientState($oldClient->state) ?? 'WA',
-                        'distribution_id' => optional($distribution)->id
+                        'distribution_id' => optional($distribution)->id,
+                        'field_rep_id' => optional($salesRep)->id,
+                        'vmi_rep_id' => optional($vmiRep)->id,
                     ]
                 );
+                if (Client::where('email', $clientData['email'])->count()) {
+                    $clientData['email'] = Str::replace(
+                        '@',
+                        '+' . $oldClient->id,
+                        $clientData['email']
+                    );
+                }
 
                 $client = Client::firstOrCreate(
                     Arr::only($clientData, ['email']),

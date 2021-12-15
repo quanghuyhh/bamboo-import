@@ -15,6 +15,7 @@ trait AsClientTrait
     public function getClientData()
     {
         return [
+            'state_code' => static::getClientState($this->state),
             'pricing_group_id' => null,
             'license' => $this->license,
             'distribution_id' => null,
@@ -82,6 +83,6 @@ trait AsClientTrait
      */
     public function getClientState(string $state): string
     {
-        return Str::upper(Str::substr($state, 0, 2)) ?? 'WA';
+        return Str::upper(!empty($state) ? Str::substr($state, 0, 2) : 'WA');
     }
 }

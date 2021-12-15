@@ -63,4 +63,14 @@ class Client extends BaseModel
     {
         return $this->belongsTo(ClientBucket::class, 'bucket_id');
     }
+
+    public function salesRep()
+    {
+        return $this->belongsTo(User::class, 'field_rep');
+    }
+
+    public function vmiRep()
+    {
+        return $this->belongsTo(User::class, 'vmi_rep');
+    }
 }
