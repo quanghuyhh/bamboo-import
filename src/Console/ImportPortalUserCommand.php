@@ -7,6 +7,7 @@ use App\Models\User;
 use Bamboo\ImportData\Models\User as OldUser;
 use Bamboo\ImportData\Services\PortalService;
 use Illuminate\Console\Command;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Throwable;
 
@@ -45,9 +46,14 @@ class ImportPortalUserCommand extends Command
                             'account_holder_id' => $accountHolderId
                         ]
                     );
-                    $user = User::create($userData);
+                    $user = User::firstOrCreate(
+                        Arr::only($userData, ['email']),
+                        $userData
+                    );
 
-                    $organizationIds = Organization::whereIn('name', $oldUser->stores()->pluck('store')->toArray());
+                    $organizationIds = Organization::whereIn('name', $oldUser->stores()->pluck('store')->toArray())
+                        ->pluck('id')
+                        ->all();
                     if (!empty($organizationIds)) {
                         $user->organizations()->sync($organizationIds);
                     }
