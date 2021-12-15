@@ -19,7 +19,7 @@ trait AsUserTrait
             'phone' => null,
             'employee_number' => null,
             'avatar' => null,
-            'password' => null,
+            'password' => '123456',
             'password_changed_at' => null,
             'active' => true,
             'confirmation_code' => null,

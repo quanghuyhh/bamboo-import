@@ -37,7 +37,7 @@ class ImportPortalUserCommand extends Command
     {
         $accountHolderId = app(PortalService::class)->getAccountHolderId();
         DB::transaction(function () use ($accountHolderId) {
-            OldUser::query()->each(function (OldUser $oldUser) use ($accountHolderId) {
+            OldUser::where('is_field_rep', true)->each(function (OldUser $oldUser) use ($accountHolderId) {
                 $userData = array_merge(
                     $oldUser->getPortalUserData(),
                     [
