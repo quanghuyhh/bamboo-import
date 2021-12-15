@@ -49,10 +49,13 @@ class ImportPortalAccountHolderCommand extends Command
             'ein' => $faker->regexify('[0-9]{9}'),
             'status' => 1,
         ];
-        $accountHolder = AccountHolder::firstOrCreate(
+        $accountHolder = AccountHolder::firstOrNew(
             Arr::only($accountHolderData, ['name']),
             $accountHolderData
         );
+        if (!$accountHolder->id) {
+            $accountHolder->forceFill(Arr::only($accountHolderData, ['id']))->save();
+        }
         $accountHolder->modules()->sync(Module::pluck('id')->toArray());
     }
 }
