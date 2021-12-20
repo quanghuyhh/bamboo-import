@@ -35,16 +35,16 @@ class ImportCategoryCommand extends Command
      */
     public function handle()
     {
-        $accountHolderId = app(PortalService::class)->getAccountHolderId();
-        DB::transaction(function () use ($accountHolderId) {
+        $accountHolder = app(PortalService::class)->getAccountHolderByName(config('import.account_holder_name'));
+        DB::transaction(function () use ($accountHolder) {
             ProductSet::query()
                 ->with('parent')
-                ->each(function (ProductSet $productSet) use ($accountHolderId) {
+                ->each(function (ProductSet $productSet) use ($accountHolder) {
                     $parent = $productSet->parent_id ? Category::firstWhere('name', $productSet->parent->name) : null;
                     $categoryData = array_merge(
                         $productSet->getSalesCategoryData(),
                         [
-                            'account_holder_id' => $accountHolderId,
+                            'account_holder_id' => $accountHolder->getKey(),
                             'parent_id' => optional($parent)->id
                         ]
                     );

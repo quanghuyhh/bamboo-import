@@ -2,7 +2,6 @@
 
 namespace Bamboo\ImportData\Services;
 
-use App\Models\Organization;
 use App\Models\User;
 use Exception;
 use Illuminate\Database\Eloquent\Model;
@@ -26,29 +25,6 @@ class PortalService
         $this->accountHolderPath = config('app.services.portal.paths.account_holder');
         # TODO: Remove verify when on prod env
         $this->request = Http::withoutVerifying()->baseUrl($this->baseUrl);
-    }
-
-    public function getAccountHolderId()
-    {
-        return config('import.account_holder_id');
-    }
-
-    /**
-     * @param $id
-     *
-     * @return Organization
-     *
-     * @throws Exception
-     */
-    public function getImportOrganization(): Organization
-    {
-        $response = $this->request->get($this->organizationPath . $id);
-
-        if ($response->failed()) {
-            throw new Exception(__('exceptions.portal_service.fetch_organizations_failed'));
-        }
-
-        return new Organization($response->json());
     }
 
     /**
@@ -111,5 +87,21 @@ class PortalService
     {
         $accountHolders = $this->getAccountHolders(['name' => $name]);
         return collect($accountHolders)->first();
+    }
+
+    public function getOrganizations(array $filters = [], array $selectedFields = []): array
+    {
+        $response = $this->request->get($this->organizationPath . 'list', ['filter' => $filters, 'select' => $selectedFields]);
+        if ($response->failed()) {
+            throw new Exception(__('exceptions.portal_service.fetch_organizations_failed'));
+        }
+
+        return $response->json();
+    }
+
+    public function getOrganizationByName(string $name): array
+    {
+        $organizations = $this->getOrganizations(['name' => $name]);
+        return collect($organizations)->first();
     }
 }

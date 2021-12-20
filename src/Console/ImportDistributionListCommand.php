@@ -35,14 +35,14 @@ class ImportDistributionListCommand extends Command
      */
     public function handle()
     {
-        $accountHolderId = app(PortalService::class)->getAccountHolderId();
-        DB::transaction(function () use ($accountHolderId) {
-            ClientBucket::query()->each(function (ClientBucket $clientBucket) use ($accountHolderId) {
+        $accountHolder = app(PortalService::class)->getAccountHolderByName(config('import.account_holder_name'));
+        DB::transaction(function () use ($accountHolder) {
+            ClientBucket::query()->each(function (ClientBucket $clientBucket) use ($accountHolder) {
                 // get client data
                 $distributionData = array_merge(
                     $clientBucket->getDistributionListData(),
                     [
-                        'account_holder_id' => $accountHolderId,
+                        'account_holder_id' => $accountHolder->name,
                         'state_code' => 'WA'
                     ]
                 );

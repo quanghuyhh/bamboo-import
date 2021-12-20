@@ -35,15 +35,14 @@ class ImportBrandCommand extends Command
      */
     public function handle()
     {
-        $accountHolderId = app(PortalService::class)->getAccountHolderId();
-        $organizationId = app(PortalService::class)->getImportOrganization();
-        DB::transaction(function () use ($accountHolderId) {
-            Store::query()->each(function (Store $store) use ($accountHolderId) {
+        $organization = app(PortalService::class)->getOrganizationByName(config('import.organization_name'));
+        DB::transaction(function () use ($organization) {
+            Store::query()->each(function (Store $store) use ($organization) {
                 $brandData = array_merge(
                     $store->getBrandData(),
                     [
-                        'account_holder_id' => $accountHolderId,
-                        'organization_id'
+                        'account_holder_id' => $organization->account_holder_id,
+                        'organization_id' => $organization->getKey()
                     ]
                 );
 

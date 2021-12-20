@@ -2,7 +2,7 @@
 
 namespace Bamboo\ImportData\Console;
 
-use App\Models\{Organization, User};
+use App\Models\{User};
 use Bamboo\ImportData\Models\User as OldUser;
 use Bamboo\ImportData\Services\PortalService;
 use Illuminate\Console\Command;
@@ -35,15 +35,14 @@ class ImportPortalUserCommand extends Command
      */
     public function handle()
     {
-        $accountHolderId = app(PortalService::class)->getAccountHolderId();
-        DB::transaction(function () use ($accountHolderId) {
+        $organization = app(PortalService::class)->getOrganizationByName(config('import.organization_name'));
+        DB::transaction(function () use ($organization) {
             OldUser::where('is_field_rep', true)
-                ->with('stores')
-                ->each(function (OldUser $oldUser) use ($accountHolderId) {
+                ->each(function (OldUser $oldUser) use ($organization) {
                     $userData = array_merge(
                         $oldUser->getPortalUserData(),
                         [
-                            'account_holder_id' => $accountHolderId
+                            'account_holder_id' => $organization->account_holder_id
                         ]
                     );
                     $user = User::firstOrCreate(
@@ -51,12 +50,7 @@ class ImportPortalUserCommand extends Command
                         $userData
                     );
 
-                    $organizationIds = Organization::whereIn('name', $oldUser->stores()->pluck('store')->toArray())
-                        ->pluck('id')
-                        ->all();
-                    if (!empty($organizationIds)) {
-                        $user->organizations()->sync($organizationIds);
-                    }
+                    $user->organizations()->sync([$organization->getKey()]);
                 });
         });
     }

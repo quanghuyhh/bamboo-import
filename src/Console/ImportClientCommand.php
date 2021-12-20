@@ -37,11 +37,11 @@ class ImportClientCommand extends Command
      */
     public function handle()
     {
-        $accountHolderId = app(PortalService::class)->getAccountHolderId();
+        $accountHolder = app(PortalService::class)->getAccountHolderByName(config('import.account_holder_name'));
         $distributionList = Distribution::get(['id', 'name']);
         $users = app(PortalService::class)->fetchAllUsers();
-        DB::transaction(function () use ($distributionList, $accountHolderId, $users) {
-            OldClient::query()->each(function (OldClient $oldClient) use ($distributionList, $accountHolderId, $users) {
+        DB::transaction(function () use ($distributionList, $accountHolder, $users) {
+            OldClient::query()->each(function (OldClient $oldClient) use ($distributionList, $accountHolder, $users) {
                 // find distribution
                 $distribution = !empty($oldClient->distributionList) ? $distributionList->firstWhere('name', $oldClient->distributionList->name) : null;
 
@@ -55,7 +55,7 @@ class ImportClientCommand extends Command
                 $clientData = array_merge(
                     $oldClient->getClientData(),
                     [
-                        'account_holder_id' => $accountHolderId,
+                        'account_holder_id' => $accountHolder->getKey(),
                         'distribution_id' => optional($distribution)->id,
                         'field_rep_id' => optional($salesRep)->id,
                         'vmi_rep_id' => optional($vmiRep)->id,

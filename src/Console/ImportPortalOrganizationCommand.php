@@ -2,8 +2,7 @@
 
 namespace Bamboo\ImportData\Console;
 
-use App\Models\Organization;
-use Bamboo\ImportData\Services\PortalService;
+use App\Models\{AccountHolder, Organization};
 use Illuminate\Console\Command;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
@@ -34,7 +33,7 @@ class ImportPortalOrganizationCommand extends Command
      */
     public function handle()
     {
-        $accountHolder = app(PortalService::class)->getAccountHolderByName(config('import.account_holder_name'));
+        $accountHolder = AccountHolder::firstWhere('name', config('import.account_holder_name'));
         DB::transaction(function () use ($accountHolder) {
             $organizationData = [
                 'name' => config('import.organization_name'),
