@@ -185,4 +185,10 @@ abstract class PackageServiceProvider extends MergeConfigServiceProvider
     {
         return app()->basePath() . '/config' . ($path ? '/' . $path : $path);
     }
+
+    public function getProjectName()
+    {
+        $paths = explode("/", base_path());
+        return end($paths);
+    }
 }

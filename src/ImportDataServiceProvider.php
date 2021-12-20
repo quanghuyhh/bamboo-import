@@ -9,12 +9,16 @@ use Bamboo\ImportData\Console\{ImportCategoryCommand,
     ImportDistributionListCommand,
     ImportPortalAccountHolderCommand,
     ImportPortalOrganizationCommand,
-    ImportPortalUserCommand
-};
+    ImportPortalUserCommand};
 
 class ImportDataServiceProvider extends PackageServiceProvider
 {
     protected $packageName = 'bambooo/import-data';
+
+    protected const SALES_PROJECT = 'sales';
+    protected const TRACE_PROJECT = 'trace';
+    protected const PORTAL_PROJECT = 'portal';
+    protected const AUTH_PROJECT = 'auth';
 
     public function registerConfigs()
     {
@@ -23,17 +27,23 @@ class ImportDataServiceProvider extends PackageServiceProvider
 
     public function registerCommands()
     {
-        return [
-            // sales
-            ImportClientCommand::class,
-            ImportDistributionListCommand::class,
-            ImportCategoryCommand::class,
-
-            // portal
-            ImportPortalAccountHolderCommand::class,
-            ImportPortalOrganizationCommand::class,
-            ImportPortalUserCommand::class,
-        ];
+        switch ($this->getProjectName())
+        {
+            case self::SALES_PROJECT:
+                return [
+                    ImportClientCommand::class,
+                    ImportDistributionListCommand::class,
+                    ImportCategoryCommand::class,
+                ];
+            case self::PORTAL_PROJECT:
+                return [
+                    ImportPortalAccountHolderCommand::class,
+                    ImportPortalOrganizationCommand::class,
+                    ImportPortalUserCommand::class,
+                ];
+            default:
+                return [];
+        }
     }
 
     public function configurePackage(Package $package): void

@@ -34,7 +34,7 @@ class ImportPortalOrganizationCommand extends Command
      */
     public function handle()
     {
-        $accountHolder = app(PortalService::class)->getAccountHolderByName('Bamboo');
+        $accountHolder = app(PortalService::class)->getAccountHolderByName(config('import.account_holder_name'));
         DB::transaction(function () use ($accountHolder) {
             $organizationData = [
                 'name' => config('import.organization_name'),
