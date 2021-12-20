@@ -21,6 +21,7 @@ return [
                 'license_type' => 'license-types/',
                 'license' => 'licenses/',
                 'user' => 'users/',
+                'account_holder' => 'account-holders/',
             ],
         ],
         'trace' => [

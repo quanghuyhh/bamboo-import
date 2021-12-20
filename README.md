@@ -11,6 +11,18 @@
 
     `DB_REMOTE_PASSWORD`
 
+# Install package or copy source code to other project
+- install package
+```bash
+composer require bambooo/import-data
+```
+
+- load service provider
+```
+# Load service provider to bootstrap/app.php
+$app->register(Bamboo\ImportData\ImportDataServiceProvider::class);
+```
+
 ---
 # Import data in portal
 - Create `Bamboo` account holder

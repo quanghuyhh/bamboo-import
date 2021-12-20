@@ -17,7 +17,7 @@ class ImportCategoryCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'import:category';
+    protected $signature = 'import:categories';
 
     /**
      * The console command description.

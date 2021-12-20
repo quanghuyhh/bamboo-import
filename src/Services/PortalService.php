@@ -2,6 +2,7 @@
 
 namespace Bamboo\ImportData\Services;
 
+use App\Models\Organization;
 use App\Models\User;
 use Exception;
 use Illuminate\Database\Eloquent\Model;
@@ -14,6 +15,7 @@ class PortalService
     private string $baseUrl;
     private string $userPath;
     private string $organizationPath;
+    private string $accountHolderPath;
     private PendingRequest $request;
 
     public function __construct()
@@ -21,6 +23,7 @@ class PortalService
         $this->baseUrl = config('app.services.portal.base_url');
         $this->userPath = config('app.services.portal.paths.user');
         $this->organizationPath = config('app.services.portal.paths.organization');
+        $this->accountHolderPath = config('app.services.portal.paths.account_holder');
         # TODO: Remove verify when on prod env
         $this->request = Http::withoutVerifying()->baseUrl($this->baseUrl);
     }
@@ -28,6 +31,24 @@ class PortalService
     public function getAccountHolderId()
     {
         return config('import.account_holder_id');
+    }
+
+    /**
+     * @param $id
+     *
+     * @return Organization
+     *
+     * @throws Exception
+     */
+    public function getImportOrganization(): Organization
+    {
+        $response = $this->request->get($this->organizationPath . $id);
+
+        if ($response->failed()) {
+            throw new Exception(__('exceptions.portal_service.fetch_organizations_failed'));
+        }
+
+        return new Organization($response->json());
     }
 
     /**
@@ -74,5 +95,21 @@ class PortalService
         }
 
         return $response->json();
+    }
+
+    public function getAccountHolders(array $filters = [], array $selectedFields = []): array
+    {
+        $response = $this->request->get($this->accountHolderPath . 'list', ['filter' => $filters, 'select' => $selectedFields]);
+        if ($response->failed()) {
+            throw new Exception(__('exceptions.portal_service.fetch_account_holder_failed'));
+        }
+
+        return $response->json();
+    }
+
+    public function getAccountHolderByName(string $name): array
+    {
+        $accountHolders = $this->getAccountHolders(['name' => $name]);
+        return collect($accountHolders)->first();
     }
 }

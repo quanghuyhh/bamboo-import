@@ -2,12 +2,12 @@
 
 namespace Bamboo\ImportData\Models;
 
-use Bamboo\ImportData\Models\Transforms\AsOrganizationTrait;
+use Bamboo\ImportData\Models\Transforms\AsBrandTrait;
 
 class Store extends BaseModel
 {
-    use AsOrganizationTrait;
-
+    use AsBrandTrait;
+    
     protected $fillable = [
         'store',
         'position',
