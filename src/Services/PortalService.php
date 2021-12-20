@@ -2,6 +2,7 @@
 
 namespace Bamboo\ImportData\Services;
 
+use App\Models\Organization;
 use App\Models\User;
 use Exception;
 use Illuminate\Database\Eloquent\Model;
@@ -75,7 +76,7 @@ class PortalService
 
     public function getAccountHolders(array $filters = [], array $selectedFields = []): array
     {
-        $response = $this->request->get($this->accountHolderPath . 'list', ['filter' => $filters, 'select' => $selectedFields]);
+        $response = $this->request->get($this->accountHolderPath . 'index', ['filter' => $filters, 'select' => $selectedFields]);
         if ($response->failed()) {
             throw new Exception(__('exceptions.portal_service.fetch_account_holder_failed'));
         }
@@ -89,19 +90,18 @@ class PortalService
         return collect($accountHolders)->first();
     }
 
-    public function getOrganizations(array $filters = [], array $selectedFields = []): array
+    public function getOrganizations(array $filters = [], array $selectedFields = []): Collection
     {
-        $response = $this->request->get($this->organizationPath . 'list', ['filter' => $filters, 'select' => $selectedFields]);
+        $response = $this->request->get($this->organizationPath, ['filter' => $filters, 'select' => $selectedFields]);
         if ($response->failed()) {
             throw new Exception(__('exceptions.portal_service.fetch_organizations_failed'));
         }
 
-        return $response->json();
+        return $this->collect($response->json(), Organization::class);
     }
 
-    public function getOrganizationByName(string $name): array
+    public function getOrganizationByName(string $name): Organization
     {
-        $organizations = $this->getOrganizations(['name' => $name]);
-        return collect($organizations)->first();
+        return $this->getOrganizations(['name' => $name], ['account_holder_id'])->first();
     }
 }

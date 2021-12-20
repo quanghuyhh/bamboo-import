@@ -24,7 +24,7 @@ class ImportBrandCommand extends Command
      *
      * @var string
      */
-    protected $description = 'Import portal organization from old system';
+    protected $description = 'Import brands from old system';
 
     /**
      * Execute the console command.
@@ -47,7 +47,14 @@ class ImportBrandCommand extends Command
                 );
 
                 Brand::firstOrCreate(
-                    Arr::only($brandData, ['name']),
+                    Arr::only(
+                        $brandData,
+                        [
+                            'account_holder_id',
+                            'organization_id',
+                            'name'
+                        ]
+                    ),
                     $brandData
                 );
             });

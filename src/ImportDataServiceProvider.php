@@ -4,7 +4,8 @@ namespace Bamboo\ImportData;
 
 use Bamboo\ImportData\Base\Package;
 use Bamboo\ImportData\Base\PackageServiceProvider;
-use Bamboo\ImportData\Console\{ImportCategoryCommand,
+use Bamboo\ImportData\Console\{ImportBrandCommand,
+    ImportCategoryCommand,
     ImportClientCommand,
     ImportDistributionListCommand,
     ImportPortalAccountHolderCommand,
@@ -34,6 +35,7 @@ class ImportDataServiceProvider extends PackageServiceProvider
                     ImportClientCommand::class,
                     ImportDistributionListCommand::class,
                     ImportCategoryCommand::class,
+                    ImportBrandCommand::class,
                 ];
             case self::PORTAL_PROJECT:
                 return [

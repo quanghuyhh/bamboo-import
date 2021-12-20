@@ -42,8 +42,8 @@ class ImportDistributionListCommand extends Command
                 $distributionData = array_merge(
                     $clientBucket->getDistributionListData(),
                     [
-                        'account_holder_id' => $accountHolder->name,
-                        'state_code' => 'WA'
+                        'account_holder_id' => $accountHolder['id'],
+                        'state_code' => config('import.state_code')
                     ]
                 );
                 Distribution::firstOrCreate(

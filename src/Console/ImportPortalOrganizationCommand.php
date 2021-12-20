@@ -15,7 +15,7 @@ class ImportPortalOrganizationCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'import:portal-organization';
+    protected $signature = 'import:organization';
 
     /**
      * The console command description.

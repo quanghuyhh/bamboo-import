@@ -17,7 +17,7 @@ class ImportCategoryCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'import:categories';
+    protected $signature = 'import:category';
 
     /**
      * The console command description.
@@ -44,7 +44,7 @@ class ImportCategoryCommand extends Command
                     $categoryData = array_merge(
                         $productSet->getSalesCategoryData(),
                         [
-                            'account_holder_id' => $accountHolder->getKey(),
+                            'account_holder_id' => $accountHolder['id'],
                             'parent_id' => optional($parent)->id
                         ]
                     );

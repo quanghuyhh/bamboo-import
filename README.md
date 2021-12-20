@@ -27,17 +27,17 @@ $app->register(Bamboo\ImportData\ImportDataServiceProvider::class);
 # Import data in portal
 - Create `Bamboo` account holder
 ```bash
-php artisan import:portal-account-holder
+php artisan import:account-holder
 ```
 
 - Import Organizations
 ```bash
-php artisan import:portal-organization
+php artisan import:organization
 ```
 
 - Import Users
 ```bash
-php artisan import:portal-user
+php artisan import:user
 ```
 
 ---

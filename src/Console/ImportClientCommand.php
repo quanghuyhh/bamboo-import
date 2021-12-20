@@ -55,7 +55,7 @@ class ImportClientCommand extends Command
                 $clientData = array_merge(
                     $oldClient->getClientData(),
                     [
-                        'account_holder_id' => $accountHolder->getKey(),
+                        'account_holder_id' => $accountHolder['id'],
                         'distribution_id' => optional($distribution)->id,
                         'field_rep_id' => optional($salesRep)->id,
                         'vmi_rep_id' => optional($vmiRep)->id,

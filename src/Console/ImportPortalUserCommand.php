@@ -16,7 +16,7 @@ class ImportPortalUserCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'import:portal-user';
+    protected $signature = 'import:user';
 
     /**
      * The console command description.
