@@ -2,9 +2,8 @@
 
 namespace Bamboo\ImportData\Console;
 
-use App\Models\{User};
+use App\Models\{Organization, User};
 use Bamboo\ImportData\Models\User as OldUser;
-use Bamboo\ImportData\Services\PortalService;
 use Illuminate\Console\Command;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
@@ -35,7 +34,7 @@ class ImportPortalUserCommand extends Command
      */
     public function handle()
     {
-        $organization = app(PortalService::class)->getOrganizationByName(config('import.organization_name'));
+        $organization = Organization::firstWhere('name', config('import.organization_name'));
         DB::transaction(function () use ($organization) {
             OldUser::where('is_field_rep', true)
                 ->each(function (OldUser $oldUser) use ($organization) {
